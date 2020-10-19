@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require("electron");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow, secondaryWindow;
 
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
@@ -14,8 +14,26 @@ function createWindow() {
     backgroundColor: "#2B2E3B",
   });
 
+  secondaryWindow = new BrowserWindow({
+    width: 600,
+    height: 300,
+    webPreferences: { nodeIntegration: true },
+    parent: mainWindow,
+    modal: true,
+    show: false,
+  });
+
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("index.html");
+  secondaryWindow.loadFile("secondary.html");
+
+  setTimeout(() => {
+    secondaryWindow.show();
+    setTimeout(() => {
+      secondaryWindow.close();
+      secondaryWindow = null;
+    }, 3000);
+  }, 2000);
 
   // Open DevTools - Remove for PRODUCTION!
   // mainWindow.webContents.openDevTools();
